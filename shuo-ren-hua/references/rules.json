@@ -1,0 +1,26 @@
+{
+  "schema_version": "2.0",
+  "profiles": {
+    "general": {"length_hints": true, "pronoun": true, "repetition": true, "style": true},
+    "professional": {"length_hints": true, "pronoun": true, "repetition": true, "style": true},
+    "narrative": {"length_hints": false, "pronoun": true, "repetition": false, "style": false}
+  },
+  "length_hints": {"clause_han_gt": 50, "sentence_han_gt": 100, "clause_count_gte": 4, "calibrated": false, "auto_split": false},
+  "repetition": {"minimum_occurrences": 3, "phrases": ["不能证明", "仅供参考", "需要更多证据", "仍需验证", "不能据此认定"]},
+  "style_markers": ["值得注意的是", "需要指出的是", "从某种意义上说", "更微妙的是", "赋能", "抓手", "底层逻辑"],
+  "rules": [
+    {"id": "F01", "normative_level": "required", "detection_method": "semantic", "report_level": null, "owner": "references/reality.md", "requires_semantic_review": true},
+    {"id": "F02", "normative_level": "required", "detection_method": "semantic", "report_level": null, "owner": "references/editing.md", "requires_semantic_review": true},
+    {"id": "F03", "normative_level": "required", "detection_method": "deterministic", "report_level": "error", "owner": "references/editing.md", "requires_semantic_review": false},
+    {"id": "F04", "normative_level": "required", "detection_method": "semantic", "report_level": null, "owner": "references/reality.md", "requires_semantic_review": true},
+    {"id": "T01", "normative_level": "required", "detection_method": "semantic", "report_level": null, "owner": "references/formats.md", "requires_semantic_review": true},
+    {"id": "L01", "normative_level": "default", "detection_method": "heuristic", "report_level": "info", "owner": "references/plain-language.md", "requires_semantic_review": false},
+    {"id": "L02", "normative_level": "default", "detection_method": "heuristic", "report_level": "warning", "owner": "references/plain-language.md", "requires_semantic_review": false},
+    {"id": "L03", "normative_level": "default", "detection_method": "semantic", "report_level": null, "owner": "references/plain-language.md", "requires_semantic_review": true},
+    {"id": "L04", "normative_level": "required", "detection_method": "semantic", "report_level": null, "owner": "references/plain-language.md", "requires_semantic_review": true},
+    {"id": "L05", "normative_level": "default", "detection_method": "heuristic", "report_level": "info", "owner": "references/plain-language.md", "requires_semantic_review": false},
+    {"id": "L06", "normative_level": "default", "detection_method": "semantic", "report_level": null, "owner": "references/plain-language.md", "requires_semantic_review": true},
+    {"id": "S01", "normative_level": "preference", "detection_method": "heuristic", "report_level": "info", "owner": "references/plain-language.md", "requires_semantic_review": false},
+    {"id": "S02", "normative_level": "default", "detection_method": "semantic", "report_level": null, "owner": "references/editing.md", "requires_semantic_review": true}
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "说人话"
+  short_description: "保留事实与原意，把中文写清楚、改自然，让表达符合读者和场合"
+  default_prompt: "使用 $shuo-ren-hua（说人话），保留我的事实和原意，按读者需要把文字写清楚，语气符合场合。"
