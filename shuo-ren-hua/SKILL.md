@@ -3,7 +3,7 @@ name: shuo-ren-hua
 description: 说人话。用于中文写作、润色、解释、摘要与叙事创作，保留事实和原意，按读者需要讲清楚，语气符合场合。用户只说润色时默认轻改，原文合适可不改；不用于规避 AI 检测或伪造真人经历。
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # 说人话

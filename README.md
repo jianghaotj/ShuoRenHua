@@ -4,7 +4,7 @@
 
 ![说人话：把意思讲清楚，把原意留下来](assets/shuorenhua-cover.png)
 
-[![Version](https://img.shields.io/badge/version-1.0.0-1f1a14)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.1.0-1f1a14)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-8f7650)](LICENSE)
 [![skills.sh 安装统计](https://skills.sh/b/jianghaotj/ShuoRenHua)](https://skills.sh/jianghaotj/ShuoRenHua)
 
@@ -145,6 +145,16 @@ ShuoRenHua/
 - 如果涉及检查器，附上命令和相关报告。
 
 提交前请移除个人隐私和公司内部信息。
+
+## 参考
+
+1.1.0 在已有规则上，按中文写作场景筛选了以下资料中的写法：
+
+- [lieflat-less-ai-tone](https://github.com/larashero3-dotcom/lieflat-less-ai-tone)（MIT）：部分表达的触发形态及检查器词表，保留作者版权声明。
+- [Google developer documentation style guide](https://developers.google.com/style)（CC BY 4.0）：信息顺序、教程步骤、备注与警告、术语和产品能力的表达。
+- [ASD-STE100 Issue 9](https://asd-ste100.org/)（© ASD）：词义、指代和操作说明的写法。标准原始文件不随仓库分发。
+
+具体对应的页面、规则与适用范围见 [formats.md](shuo-ren-hua/references/formats.md) 和 [plain-language.md](shuo-ren-hua/references/plain-language.md)。例句采用自拟的中文场景；本技能不是上述标准的实现、译本或认证产物。
 
 ## 致谢与许可
 

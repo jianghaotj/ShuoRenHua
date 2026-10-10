@@ -4,6 +4,7 @@
 # MIT License
 #
 # Copyright (c) 2026 Human Writing Skill contributors
+# Copyright (c) 2026 shiujan (lieflat-less-ai-tone)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +23,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+#
+# The comment-opener and anaphor word sets used by the L02 paragraph-opening
+# check and the lead-in colon heuristic under S01 derive from
+# lieflat-less-ai-tone (https://github.com/larashero3-dotcom/lieflat-less-ai-tone).
 
 """说人话：read-only diagnostics, never an independent semantic verdict.
 
@@ -43,12 +48,28 @@ from prose_blocks import HAN_COUNT_VERSION, PARSER_VERSION, SourceMap, han_count
 
 DEFAULT_RULES = Path(__file__).resolve().parent.parent / "references" / "rules.json"
 RULE_IDS = {"F01", "F02", "F03", "F04", "T01", "L01", "L02", "L03", "L04", "L05", "L06", "S01", "S02"}
+COMMENT_OPENERS = ("听起来", "看起来", "看上去", "听上去", "说白了", "说到底", "换句话说", "意味着", "值得注意",
+                   "不难看出", "细看", "再看", "回过头看", "问题在于", "原因在于", "结果是", "有意思的是",
+                   "更重要的是", "关键在于", "真正的")
+ANAPHORS = ("这", "那", "其", "此", "上面", "前面", "刚才", "以上", "该", "它", "他", "她", "它们", "他们",
+            "同样", "类似", "相比", "反过来", "但", "不过", "所以", "因此", "于是", "而", "另", "除此", "与此")
+# Retain the upstream sets above; use only L02 openers in this heuristic.
+# L05 paraphrases require semantic review; S01 already covers stock lead-ins.
+COMMENT_EXCLUSIONS = ("换句话说", "意味着", "说白了", "说到底")
+# Inside the first sentence these connectives link to the preceding clause,
+# not to the earlier paragraph; the paragraph-opening check looks past them.
+CLAUSE_CONNECTIVES = ("但是", "但", "不过", "所以", "因此", "于是", "而且", "而")
+REFERENCE_WORDS = tuple(word for word in ANAPHORS if word not in CLAUSE_CONNECTIVES)
+# Forward pointers name the commented object in the text that follows it.
+FORWARD_POINTERS = ("以下", "下面", "下列", "下述", "如下")
+# Modal "该" before a question word means "should", not a demonstrative.
+NON_ANAPHOR_PREFIXES = ("其实", "其他", "其它", "其次", "那么", "该怎么", "该怎样", "该如何", "该不该", "该不会")
 SEMANTIC_LIMITS = [
     "F01 新增事实、来源支持和亲历真实性未核验",
     "F02 否定、条件、结论强度、责任和范围是否保留未核验",
     "F04 引用是否支持所在主张未核验；标识存在不等于支持关系成立",
     "T01 任务和必要内容是否完整未核验",
-    "L02 指代对象是否唯一未核验；仅提示跨结构候选",
+    "L02 指代对象是否唯一未核验；仅提示跨结构与段首评论候选",
     "L03 术语是否适合读者未核验",
     "L04 逻辑关系与 L06 搭配是否准确未核验",
     "L05 同义重复和局部限定必要性未核验",
@@ -171,6 +192,16 @@ def _pronoun(value: str):
     return word
 
 
+def _points_to_object(clause: str) -> bool:
+    clause = clause.lstrip()
+    connective = next((word for word in CLAUSE_CONNECTIVES if clause.startswith(word)), None)
+    if connective:
+        clause = clause[len(connective):].lstrip()
+    if clause.startswith(FORWARD_POINTERS):
+        return True
+    return clause.startswith(REFERENCE_WORDS) and not clause.startswith(NON_ANAPHOR_PREFIXES)
+
+
 def analyze(text: str, config: dict, profile: str = "general", original: str | None = None,
             contract: dict | None = None, input_path: str = "<memory>") -> dict:
     validate_rules(config)
@@ -196,7 +227,10 @@ def analyze(text: str, config: dict, profile: str = "general", original: str | N
             item["details"] = details
         issues.append(item)
 
-    for block in parsed.blocks:
+    blocks = parsed.blocks
+    previous_block = None
+    for index, block in enumerate(blocks):
+        comment_start = None
         if block.kind != "heading":
             for a, b, sentence in _sentences(block.text):
                 clauses = [part for part in re.split(r"[，,；;]+", re.sub(r"[。！？!?]+$", "", sentence)) if part.strip()]
@@ -224,6 +258,23 @@ def analyze(text: str, config: dict, profile: str = "general", original: str | N
                 start = len(block.text) - len(block.text.lstrip(" \t“‘\"'（("))
                 issue("L02", block, start, start + len(word), "结构边界后出现指代候选；尚未判断对象是否唯一。",
                       "结合前后对象、话题和动作核对指向；仅在确有歧义时补明对象。", {"candidate": word})
+        # Reuse style to skip narrative prose without changing schema 2.0.
+        # A separate switch would require a future schema 2.1 change.
+        # Quote blocks and paragraphs starting with quotation marks are excluded.
+        if (settings["pronoun"] and settings["style"] and block.kind == "paragraph"
+                and previous_block is not None and previous_block.kind != "heading"):
+            head = block.text.lstrip(" \t（(")
+            opener = next((word for word in COMMENT_OPENERS
+                           if word not in COMMENT_EXCLUSIONS and head.startswith(word)), None)
+            if opener:
+                prefix = "值得注意的是" if head.startswith("值得注意的是") else opener
+                first_sentence = re.split(r"[。！？!?]", head[len(prefix):], maxsplit=1)[0]
+                if not any(_points_to_object(part) for part in re.split(r"[，,；;：:]", first_sentence)):
+                    comment_start = len(block.text) - len(head)
+                    issue("L02", block, comment_start, comment_start + len(prefix),
+                          "段首评论语后的首句中，未在分句开头识别到回指或指向下文的成分；尚未判断对象是否明确。",
+                          "结合完整语境核对评论对象和分句中间的回指；确有歧义时补回指或点明对象，不删评论。",
+                          {"candidate": prefix})
         if settings["repetition"]:
             for match in _matches(block.text, config["repetition"]["phrases"]):
                 start, end = block.span(*match.span())
@@ -231,9 +282,36 @@ def analyze(text: str, config: dict, profile: str = "general", original: str | N
                                                "context_excerpt": re.sub(r"\s+", " ", block.text[max(0, match.start() - 25):match.end() + 55]).strip(),
                                                "claim_summary": None})
         if settings["style"]:
+            lead_in = None
+            following = blocks[index + 1] if index + 1 < len(blocks) else None
+            if (block.kind == "paragraph" and following is not None and following.kind == "list_item"
+                    and block.text.rstrip().endswith(("：", ":"))):
+                # The parser omits code and unsupported regions from blocks.
+                # Check the source gap so an intervening region breaks adjacency.
+                list_line_start = text.rfind("\n", 0, following.span()[0]) + 1
+                sentences = list(_sentences(block.text))
+                if sentences and not text[block.span()[1]:list_line_start].strip():
+                    # The last sentence is the one that introduces the list.
+                    lead_in = sentences[-1][:2]
+            # An L02 comment candidate inside the lead-in already asks for the missing object.
+            if lead_in and comment_start is not None and lead_in[0] <= comment_start < lead_in[1]:
+                lead_in = None
             for match in _matches(block.text, config["style_markers"]):
+                # The specific L02 candidate takes priority only at the same start.
+                # Later style candidates in this block remain visible.
+                if comment_start is not None and match.start() == comment_start:
+                    continue
+                # A marker that forms the lead-in's announcing tail is covered by the
+                # lead-in candidate; other markers in the sentence remain visible.
+                if (lead_in and lead_in[0] <= match.start() and match.end() <= lead_in[1]
+                        and block.text[match.end():lead_in[1]] in ("", "：", ":")):
+                    continue
                 issue("S01", block, *match.span(), "词形命中语境候选；本义、术语或人物口吻可能完全正常。",
                       "检查这处表达是否传达具体信息；必要术语、物理本义和有意修辞可保留。")
+            if lead_in:
+                issue("S01", block, *lead_in, "引导句以冒号收尾并紧接列表；尚未判断它是否自带信息。",
+                      "核对引导句是否说明了列表的对象和范围；只是宣布“下面有列表”时删掉或补信息，不动列表项。")
+        previous_block = block
 
     for phrase, occurrences in repeats.items():
         if len(occurrences) >= config["repetition"]["minimum_occurrences"]:
