@@ -3,7 +3,7 @@ name: shuo-ren-hua
 description: 说人话。用于中文写作、润色、解释、摘要与叙事创作，保留事实和原意，按读者需要讲清楚，语气符合场合。用户只说润色时默认轻改，原文合适可不改；不用于规避 AI 检测或伪造真人经历。
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # 说人话
@@ -56,7 +56,7 @@ metadata:
 | --- | --- |
 | 改写、摘要、较复杂润色，需要确认修改范围或保真 | [editing.md](references/editing.md) |
 | 主干、指代、术语、衔接、重复限定或搭配有理解障碍 | [plain-language.md](references/plain-language.md) |
-| 现实事件、数据、多来源材料或用户亲历需要核对 | [reality.md](references/reality.md) |
+| 现实事件、数据、多来源材料、录音转写或会议记录、用户亲历需要核对 | [reality.md](references/reality.md) |
 | 工作消息、邮件、解释、分析、教程等需要安排结构 | [formats.md](references/formats.md) |
 | 用户要有叙述声音的长帖、散文、评论或人物稿 | [forum-prose.md](references/forum-prose.md) |
 | 小说、故事、剧本、对白、诗歌 | [fiction.md](references/fiction.md) |

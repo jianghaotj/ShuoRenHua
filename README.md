@@ -4,7 +4,7 @@
 
 ![说人话：把意思讲清楚，把原意留下来](assets/shuorenhua-cover.png)
 
-[![Version](https://img.shields.io/badge/version-1.1.0-1f1a14)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.2.0-1f1a14)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-8f7650)](LICENSE)
 [![skills.sh 安装统计](https://skills.sh/b/jianghaotj/ShuoRenHua)](https://skills.sh/jianghaotj/ShuoRenHua)
 
@@ -20,6 +20,7 @@
 | 写工作消息或邮件 | 说清对象、行动、责任和已有的时间要求 |
 | 解释一个概念 | 按读者已有的知识解释术语，把关系讲明白 |
 | 整理摘要 | 提取核心信息，保留影响结论的条件和范围 |
+| 整理会议记录或访谈 | 按读者需要整理顺序，核对转写里的人名与数字，原话与转述分开 |
 | 写分析 | 说清结论的条件、依据和代价 |
 | 写教程 | 按操作顺序安排步骤，在对应位置说明前提、结果和风险 |
 | 写长文、故事或对白 | 保留叙述声音、人物视角和节奏，区分现实材料与虚构内容 |
@@ -28,7 +29,7 @@
 
 “尚未发现问题”不能改成“没有问题”；“可能有效”不能改成“明确有效”。文字更顺的同时，意思也应当准确。
 
-1.1.0 补充了教程的步骤顺序、备注和警告写法，也细化了用词与重复表述的审校规则。版本改动见 [更新记录](CHANGELOG.md)。
+1.2.0 补充了录音转写、访谈与会议记录材料的保真处理，也细化了多余限定、段末拔高、解释起点和结构重写的核对。版本改动见 [更新记录](CHANGELOG.md)。
 
 <p align="center">
   <img src="assets/shuorenhua-principles.png" alt="该改的地方改，写得好的地方留：默认轻改、保留条件与承诺、按读者和场合表达、检查结果供审校参考" width="540">
@@ -167,8 +168,9 @@ ShuoRenHua/
 - [lieflat-less-ai-tone](https://github.com/larashero3-dotcom/lieflat-less-ai-tone)（MIT）：部分表达的触发形态及检查器词表，保留作者版权声明。
 - [Google developer documentation style guide](https://developers.google.com/style)（CC BY 4.0）：信息顺序、教程步骤、备注与警告、术语和产品能力的表达。
 - [ASD-STE100 Issue 9](https://asd-ste100.org/)（© ASD）：词义、指代和操作说明的写法。标准原始文件不随仓库分发。
+- [cida](https://github.com/mizzlelover/cida)（MIT）：1.2.0 借鉴其转写材料整理与解释推进的思路，用在 reality.md 的录音转写一节、plain-language.md 的 L05/S01、formats.md 的解释和 editing.md 的结构重写；只借鉴方法，未复制文字。
 
-具体对应的页面、规则与适用范围见 [formats.md](shuo-ren-hua/references/formats.md) 和 [plain-language.md](shuo-ren-hua/references/plain-language.md)。例句采用自拟的中文场景；本技能不是上述标准的实现、译本或认证产物。
+前三项具体对应的页面、规则与适用范围见 [formats.md](shuo-ren-hua/references/formats.md) 和 [plain-language.md](shuo-ren-hua/references/plain-language.md)。例句采用自拟的中文场景；本技能不是上述标准的实现、译本或认证产物。
 
 ## 致谢与许可
 
