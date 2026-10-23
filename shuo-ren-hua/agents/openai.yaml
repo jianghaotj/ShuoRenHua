@@ -1,4 +1,4 @@
 interface:
   display_name: "说人话"
-  short_description: "保留事实与原意，把中文写清楚、改自然，让表达符合读者和场合"
-  default_prompt: "使用 $shuo-ren-hua（说人话），保留我的事实和原意，按读者需要把文字写清楚，语气符合场合。"
+  short_description: "把晦涩文字、公文腔或 AI 腔改成一眼看懂、像真人写的中文，同时守住事实与原意"
+  default_prompt: "使用 $shuo-ren-hua（说人话），把这段话或材料写成一眼能看懂、像真人说话的中文；如果原句拗口或有 AI 味，直接破壳重说，但保留原有的事实、数据和限制条件。"
